@@ -5,8 +5,4 @@ Creating an intelligent parking solution for metropolitan areas is the aim of th
 
 Key Features are :
 
-Real-time Parking Spot Detection
-User-Friendly Interface
-Google Maps Integration:
-User Authentication:
-Social Impact
+Real-time Parking Spot Detection, User-Friendly Interface, Google Maps Integration, User Authentication, Social Impact
