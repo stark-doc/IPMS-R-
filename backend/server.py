@@ -18,7 +18,7 @@ cv2.namedWindow('RGB')
 cv2.setMouseCallback('RGB', RGB)
 
 async def parking_detection(websocket, path):
-    cap = cv2.VideoCapture('parking1.mp4')
+    cap = cv2.VideoCapture('/mnt/data/p2.mp4')  # Updated video file path
 
     my_file = open("coco.txt", "r")
     data = my_file.read()
