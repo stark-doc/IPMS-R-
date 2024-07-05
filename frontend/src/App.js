@@ -26,17 +26,25 @@ function App() {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [loadingLocation, setLoadingLocation] = useState(true);
   const [showParkingSlots, setShowParkingSlots] = useState(false);
-  const [parkingAvailable, setParkingAvailable] = useState(false); // Initially assume no slots are available
+  const [parkingSlots, setParkingSlots] = useState([]);
 
   const originRef = useRef();
   const destinationRef = useRef();
 
-  const parkingSlots = [
-    { lat: 12.961, lng: 77.58 },
-    // Add other parking slot coordinates here if needed
-  ];
+  const defaultParkingSlot = { lat: 12.961, lng: 77.58 };
 
   useEffect(() => {
+    const websocket = new WebSocket('ws://localhost:6789');
+
+    websocket.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.status === '1') {
+        setParkingSlots([defaultParkingSlot]);
+      } else {
+        setParkingSlots([]);
+      }
+    };
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setCurrentPosition({
@@ -51,13 +59,7 @@ function App() {
       }
     );
 
-    const ws = new WebSocket('ws://localhost:6789');
-    ws.onmessage = (event) => {
-      const status = event.data;
-      setParkingAvailable(status === '1');
-    };
-
-    return () => ws.close();
+    return () => websocket.close();
   }, []);
 
   if (!isLoaded || loadingLocation) {
@@ -106,7 +108,7 @@ function App() {
         >
           {currentPosition && <Marker position={currentPosition} />}
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
-          {showParkingSlots && parkingAvailable && parkingSlots.map((slot, index) => (
+          {showParkingSlots && parkingSlots.map((slot, index) => (
             <Marker 
               key={index} 
               position={slot} 
